@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Little Heroes — Parent & Kid App</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#f0e8df;min-height:100vh;padding:24px 16px 48px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.outer{width:100%;max-width:700px;display:flex;flex-direction:column;gap:16px}
+.mode-row{display:flex;gap:8px;justify-content:center}
+.mBtn{border:2px solid transparent;border-radius:20px;padding:8px 22px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:900;cursor:pointer;transition:all .15s}
+.phones{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+.phone{width:300px;border-radius:32px;overflow:hidden;display:flex;flex-direction:column}
+.sc{display:none;flex-direction:column}
+.sc.on{display:flex}
+.sbar{padding:9px 18px 5px;display:flex;justify-content:space-between}
+.sbar span{font-size:10px;font-weight:800;color:#fff}
+.wave{height:16px;border-radius:0 0 50% 50%/0 0 14px 14px}
+.tabbar{display:flex;padding:5px 0 10px;border-top:1.5px solid}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:8px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.tab-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1}
+.bigbtn{border:none;border-radius:14px;padding:11px;width:100%;font-family:'Nunito',sans-serif;font-size:13px;font-weight:900;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;border-bottom:3px solid rgba(0,0,0,.15);transition:all .15s}
+.bigbtn:active{border-bottom-width:1px;transform:translateY(2px)}
+.bigbtn:disabled{opacity:.4;cursor:default}
+.p-phone{border:3px solid #85B7EB;background:#EEF5FC}
+.p-sbar{background:#0C447C}
+.p-hdr{background:#185FA5;padding:12px 14px 0}
+.p-wave{background:#185FA5}
+.p-body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:11px;background:#EEF5FC}
+.p-sec{font-size:10px;font-weight:900;color:#185FA5;letter-spacing:.4px;margin-bottom:6px}
+.p-card{background:#fff;border-radius:14px;padding:10px 12px;border:1.5px solid #B5D4F4}
+.p-tab{background:#fff;border-top-color:#B5D4F4}
+.tab.p-act{color:#185FA5}.tab.p-act .tab-ico{background:#E6F1FB}
+.tab.p-inact{color:#888780}
+.pin-top{background:#185FA5;padding:28px 24px 24px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.pin-lock{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.15);border:3px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:30px;line-height:1}
+.pin-dots{display:flex;gap:14px;margin:2px 0}
+.pin-dot{width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(255,255,255,.45);background:transparent;transition:all .2s}
+.pin-dot.filled{background:#fff;border-color:#fff}
+.pin-hint{font-size:10px;font-weight:700;color:rgba(255,255,255,.7)}
+.pin-err{font-size:11px;font-weight:800;text-align:center;min-height:18px;padding:3px 0;background:#fff}
+.keypad{background:#fff;padding:20px 18px 24px;display:flex;flex-direction:column;gap:0}
+.key-row{display:flex;gap:10px;margin-bottom:10px}
+.key-row:last-child{margin-bottom:0}
+.key{flex:1;background:transparent;border:none;border-radius:14px;padding:14px 6px;font-family:'Nunito',sans-serif;cursor:pointer;transition:transform .1s;display:flex;flex-direction:column;align-items:center;gap:1px;outline:none}
+.key:hover .kn{color:#185FA5}
+.key:hover .ks{color:#185FA5}
+.key:active{transform:scale(.88)}
+.key:active .kn{color:#0C447C}
+.key.empty{cursor:default;pointer-events:none}
+.kn{font-size:26px;font-weight:900;color:#2C2C2A;line-height:1;transition:color .1s}
+.ks{font-size:7px;font-weight:800;color:#B4B2A9;letter-spacing:1px;min-height:8px;transition:color .1s}
+.key.del .kn{font-size:18px;color:#888780}
+.key.del:hover .kn{color:#D85A30}
+.key.del:active .kn{color:#993C1D}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.stat-box{background:#fff;border-radius:12px;padding:8px;text-align:center;border:1.5px solid #B5D4F4}
+.stat-v{font-size:16px;font-weight:900;color:#185FA5;line-height:1}
+.stat-l{font-size:9px;font-weight:800;color:#888780;margin-top:2px}
+.prog-track{background:#E6F1FB;border-radius:99px;height:7px;overflow:hidden;margin-top:5px}
+.prog-fill{height:100%;border-radius:99px;background:#185FA5;transition:width .4s}
+.approval{background:#FCEBEB;border-radius:14px;padding:10px 12px;border:2px solid #F09595}
+.qrow-p{background:#fff;border-radius:12px;padding:8px 10px;display:flex;align-items:center;gap:8px;border:1.5px solid #B5D4F4;margin-bottom:6px}
+.qrow-p:last-child{margin-bottom:0}
+.qico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;line-height:1}
+.qinfo{flex:1;min-width:0}
+.qtitle{font-size:11px;font-weight:900;color:#0C447C;line-height:1.2}
+.qsub{font-size:9px;font-weight:700;color:#888780;margin-top:1px}
+.cheer-btn{background:#fff;border:1.5px solid #B5D4F4;border-radius:11px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;color:#0C447C;cursor:pointer;text-align:left;width:100%;margin-bottom:6px;display:flex;align-items:center;gap:7px;transition:background .12s}
+.cheer-btn:last-of-type{margin-bottom:0}
+.cheer-btn:hover{background:#E6F1FB}
+.cheer-btn:active{background:#B5D4F4}
+.cheer-ico{font-size:16px;line-height:1;flex-shrink:0}
+.cheer-txt{font-size:11px;font-weight:800;color:#0C447C}
+.lib-row{background:#fff;border-radius:12px;padding:8px 10px;display:flex;align-items:center;gap:8px;border:1.5px solid #B5D4F4;margin-bottom:6px;cursor:pointer;transition:all .12s}
+.lib-row.sel{background:#E6F1FB;border-color:#185FA5}
+.lib-row:last-child{margin-bottom:0}
+.mdot{width:7px;height:7px;border-radius:50%;background:#E24B4A;flex-shrink:0}
+.k-phone{border:3px solid #FFD4A8;background:#FFF8F0}
+.k-sbar{background:#D85A30}
+.k-wave{background:#FF8C42}
+.k-body{padding:12px 12px 14px;display:flex;flex-direction:column;gap:10px;background:#FFF8F0}
+.k-tab{background:#fff;border-top-color:#FFD4A8}
+.tab.k-act{color:#FF8C42}.tab.k-act .tab-ico{background:#FFF0E6}
+.tab.k-inact{color:#B4B2A9}
+.k-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.k-stat{background:#fff;border-radius:12px;padding:8px;text-align:center;border:1.5px solid #FFD4A8}
+.k-stat-v{font-size:16px;font-weight:900;color:#FF8C42;line-height:1}
+.k-stat-l{font-size:9px;font-weight:800;color:#B4B2A9;margin-top:2px}
+.k-xp-bar{background:rgba(255,255,255,.2);border-radius:14px;padding:8px 11px;border:1.5px solid rgba(255,255,255,.3);margin-bottom:12px}
+.k-xp-track{background:rgba(255,255,255,.2);border-radius:99px;height:6px;overflow:hidden;margin:5px 0 3px}
+.k-xp-fill{height:100%;background:#fff;border-radius:99px;transition:width .5s}
+.k-qrow{background:#fff;border-radius:13px;padding:9px 10px;display:flex;align-items:center;gap:8px;border:1.5px solid #FFD4A8;margin-bottom:6px;cursor:pointer;transition:transform .12s;position:relative;overflow:hidden}
+.k-qrow:last-child{margin-bottom:0}
+.k-qrow.done{background:#EAF3DE;border-color:#97C459}
+.k-qrow:active{transform:scale(.97)}
+.done-stripe{display:none;position:absolute;inset:0;background:rgba(234,243,222,.85);border-radius:11px;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#3B6D11;gap:4px}
+.k-qrow.done .done-stripe{display:flex}
+.cheer-msg{display:none;background:#EAF3DE;border-radius:12px;padding:8px 10px;border:1.5px solid #97C459}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.pop{animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.timer-screen{background:#1a1a2e;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:0}
+.timer-quest-ico{font-size:48px;line-height:1;margin-bottom:8px}
+.timer-quest-name{font-size:13px;font-weight:900;color:rgba(255,255,255,.7);text-align:center;margin-bottom:28px;padding:0 12px}
+.digital-clock{font-family:'Courier New',monospace;font-size:64px;font-weight:900;color:#00FF87;letter-spacing:4px;line-height:1;text-shadow:0 0 20px rgba(0,255,135,.4)}
+.digital-colon{display:inline-block}
+.digital-colon.blink{animation:blink 1s infinite}
+.timer-ms{font-family:'Courier New',monospace;font-size:22px;font-weight:900;color:rgba(0,255,135,.6);letter-spacing:2px;margin-top:4px}
+.timer-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.4);letter-spacing:2px;margin-top:12px;text-transform:uppercase}
+.timer-btns{display:flex;gap:12px;margin-top:32px}
+.t-btn{width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .15s;font-family:sans-serif}
+.t-btn:active{transform:scale(.9)}
+.t-btn.start{background:#00FF87;color:#1a1a2e}
+.t-btn.pause{background:#FFD700;color:#1a1a2e}
+.t-btn.stop{background:#FF6B6B;color:#fff}
+.t-btn.reset{background:rgba(255,255,255,.15);color:#fff}
+.t-btn.done-btn{background:#00FF87;color:#1a1a2e;width:auto;border-radius:16px;padding:0 20px;font-size:13px;font-weight:900}
+.timer-progress{width:100%;max-width:220px;height:4px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin-top:20px}
+.timer-progress-fill{height:100%;background:#00FF87;border-radius:99px;transition:width .5s}
+.qrow-timer-btn{background:#534AB7;border:none;border-radius:9px;padding:5px 9px;font-family:'Nunito',sans-serif;font-size:9px;font-weight:900;color:#fff;cursor:pointer;flex-shrink:0;transition:all .15s}
+.qrow-timer-btn:hover{background:#3C3489}
+.qrow-timer-btn.running{background:#FF8C42}
+.qrow-timer-btn.locked{background:#B4B2A9;cursor:not-allowed;opacity:.6}
+.qrow-locked-overlay{position:absolute;inset:0;background:rgba(241,239,232,.7);border-radius:11px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:10px;font-weight:900;color:#888780;pointer-events:none}
+.k-qrow.timing{border-color:#FF8C42;background:#FFF8F2}
+.k-qrow.locked-row{opacity:.55}
+.k-qrow{cursor:pointer}
+
+.req-overlay{min-height:600px;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;border-radius:32px}
+.req-sheet{background:#FFF8F0;border-radius:24px 24px 0 0;padding:16px 16px 24px;width:100%;border-top:3px solid #FFD4A8}
+.req-handle{width:36px;height:4px;background:#FFD4A8;border-radius:99px;margin:0 auto 14px}
+.req-qrow{background:#fff;border-radius:12px;padding:9px 11px;display:flex;align-items:center;gap:8px;border:1.5px solid #FFD4A8;margin-bottom:7px;cursor:pointer;transition:all .12s}
+.req-qrow:last-child{margin-bottom:0}
+.req-qrow.sel{background:#FFF0E6;border-color:#FF8C42}
+.req-qrow:active{transform:scale(.97)}
+.p-req-card{background:#FAEEDA;border-radius:14px;padding:10px 12px;border:2px solid #FAC775}
+.footer-note{text-align:center;font-size:11px;font-weight:700;color:#888780;padding:4px 0}
+</style>
+</head>
+<body>
+
+<div class="outer">
+<div class="mode-row">
+  <button class="mBtn" id="mb-p" onclick="setMode('p')" style="background:#185FA5;color:#fff;border-color:#185FA5">&#128100; หน้าพ่อแม่</button>
+  <button class="mBtn" id="mb-k" onclick="setMode('k')" style="background:#fff;color:#FF8C42;border-color:#FFD4A8">&#128049; หน้าลูก</button>
+</div>
+
+<div class="phones">
+
+<!-- PARENT PHONE -->
+<div class="phone p-phone" id="p-phone">
+
+  <!-- PIN -->
+  <div class="sc on" id="p-pin">
+    <div class="sbar p-sbar"><span>9:41</span><span>● ● ●</span></div>
+    <div class="pin-top">
+      <div class="pin-lock">&#128274;</div>
+      <div style="font-size:17px;font-weight:900;color:#fff">ใส่รหัส PIN</div>
+      <div class="pin-dots">
+        <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
+        <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
+      </div>
+      <div class="pin-hint">รหัสทดสอบ: <strong style="color:#fff">1234</strong></div>
+    </div>
+    <div class="pin-err" id="pin-err"></div>
+    <div class="keypad">
+      <div class="key-row">
+        <button class="key" onclick="pk('1')"><span class="kn">1</span><span class="ks"></span></button>
+        <button class="key" onclick="pk('2')"><span class="kn">2</span><span class="ks">ABC</span></button>
+        <button class="key" onclick="pk('3')"><span class="kn">3</span><span class="ks">DEF</span></button>
+      </div>
+      <div class="key-row">
+        <button class="key" onclick="pk('4')"><span class="kn">4</span><span class="ks">GHI</span></button>
+        <button class="key" onclick="pk('5')"><span class="kn">5</span><span class="ks">JKL</span></button>
+        <button class="key" onclick="pk('6')"><span class="kn">6</span><span class="ks">MNO</span></button>
+      </div>
+      <div class="key-row">
+        <button class="key" onclick="pk('7')"><span class="kn">7</span><span class="ks">PQRS</span></button>
+        <button class="key" onclick="pk('8')"><span class="kn">8</span><span class="ks">TUV</span></button>
+        <button class="key" onclick="pk('9')"><span class="kn">9</span><span class="ks">WXYZ</span></button>
+      </div>
+      <div class="key-row">
+        <div class="key empty"></div>
+        <button class="key" onclick="pk('0')"><span class="kn">0</span><span class="ks"></span></button>
+        <button class="key del" onclick="pd()"><span class="kn">&#9003;</span><span class="ks"></span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="sc" id="p-dash">
+    <div class="sbar p-sbar"><span>9:41</span><span>● ● ●</span></div>
+    <div class="p-hdr">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><div style="font-size:17px;font-weight:900;color:#fff">Dashboard &#128202;</div><div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.8)">น้องมิ้ว — วันนี้</div></div>
+        <div style="width:44px;height:44px;border-radius:50%;background:#B5D4F4;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1">&#128049;</div>
+      </div>
+    </div>
+    <div class="p-wave wave"></div>
+    <div class="p-body">
+      <div class="approval" id="approval">
+        <div style="font-size:11px;font-weight:900;color:#A32D2D;margin-bottom:4px">&#128276; ลูกขอปลดล็อกเวลาเล่น!</div>
+        <div style="font-size:10px;font-weight:700;color:#791F1F;margin-bottom:8px" id="apv-detail">ทำ 3 ภารกิจ — ได้ 45 นาที</div>
+        <div style="display:flex;gap:6px">
+          <button onclick="approveKid()" style="flex:1;background:#3B6D11;border:none;border-radius:9px;padding:8px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:900;color:#fff;cursor:pointer">&#10003; อนุมัติ</button>
+          <button onclick="denyKid()" style="flex:1;background:#fff;border:2px solid #F09595;border-radius:9px;padding:8px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:900;color:#A32D2D;cursor:pointer">&#10005; ปฏิเสธ</button>
+        </div>
+      </div>
+      <div class="p-req-card" id="p-quest-req" style="display:none">
+        <div style="font-size:11px;font-weight:900;color:#854F0B;margin-bottom:4px">&#10133; ลูกขอภารกิจเพิ่ม!</div>
+        <div style="font-size:10px;font-weight:700;color:#633806;margin-bottom:8px" id="p-req-detail">รอดูรายละเอียด...</div>
+        <div id="p-req-items" style="display:flex;flex-direction:column;gap:5px;margin-bottom:8px"></div>
+        <div style="display:flex;gap:6px">
+          <button onclick="approveQuestReq()" style="flex:1;background:#534AB7;border:none;border-radius:9px;padding:8px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:900;color:#fff;cursor:pointer">&#10003; อนุมัติ</button>
+          <button onclick="denyQuestReq()" style="flex:1;background:#fff;border:2px solid #FAC775;border-radius:9px;padding:8px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:900;color:#854F0B;cursor:pointer">&#10005; ไม่อนุมัติ</button>
+        </div>
+      </div>
+      <div>
+        <div class="p-sec">&#128202; progress วันนี้</div>
+        <div class="stat-grid">
+          <div class="stat-box"><div class="stat-v" id="ps-done">0</div><div class="stat-l">ทำแล้ว</div></div>
+          <div class="stat-box"><div class="stat-v" id="ps-total">5</div><div class="stat-l">ทั้งหมด</div></div>
+          <div class="stat-box"><div class="stat-v" id="ps-xp">0</div><div class="stat-l">XP วันนี้</div></div>
+        </div>
+        <div class="p-card" style="margin-top:8px">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:10px;font-weight:800;color:#888780" id="ps-pct">0% สำเร็จ</span>
+            <span style="font-size:10px;font-weight:900;color:#185FA5" id="ps-mins">0 นาที</span>
+          </div>
+          <div class="prog-track"><div class="prog-fill" id="ps-prog" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="p-sec">&#128172; ให้กำลังใจลูก</div>
+        <button class="cheer-btn" onclick="sendCheer('เก่งมากลูก! พ่อภูมิใจมากเลย')"><span class="cheer-ico">&#128522;</span><span class="cheer-txt">เก่งมากลูก! พ่อภูมิใจมากเลย</span></button>
+        <button class="cheer-btn" onclick="sendCheer('หนูทำได้ดีมากเลย แม่รักหนูนะ')"><span class="cheer-ico">&#128149;</span><span class="cheer-txt">หนูทำได้ดีมากเลย แม่รักหนูนะ</span></button>
+        <button class="cheer-btn" onclick="sendCheer('อีกนิดเดียวก็ครบแล้ว สู้ๆ นะ!')"><span class="cheer-ico">&#128170;</span><span class="cheer-txt">อีกนิดเดียวก็ครบแล้ว สู้ๆ!</span></button>
+        <div id="cheer-sent" style="display:none;background:#EAF3DE;border-radius:10px;padding:7px;font-size:10px;font-weight:800;color:#3B6D11;text-align:center;margin-top:4px">&#10003; ส่งให้ลูกแล้ว!</div>
+      </div>
+    </div>
+    <div class="tabbar p-tab">
+      <div class="tab p-act" onclick="showP('p-dash',this)"><div class="tab-ico">&#128202;</div><span>ภาพรวม</span></div>
+      <div class="tab p-inact" onclick="showP('p-manage',this)"><div class="tab-ico">&#128196;</div><span>จัดการ</span></div>
+      <div class="tab p-inact" onclick="showP('p-settings',this)"><div class="tab-ico">&#9881;</div><span>ตั้งค่า</span></div>
+    </div>
+  </div>
+
+  <!-- MANAGE -->
+  <div class="sc" id="p-manage">
+    <div class="sbar p-sbar"><span>9:41</span><span>● ● ●</span></div>
+    <div class="p-hdr">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><div style="font-size:17px;font-weight:900;color:#fff">จัดการภารกิจ &#127981;</div><div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.8)">สุ่ม / เลือกจากคลัง</div></div>
+        <div style="width:44px;height:44px;border-radius:50%;background:#B5D4F4;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1">&#128100;</div>
+      </div>
+    </div>
+    <div class="p-wave wave"></div>
+    <div class="p-body">
+      <div style="display:flex;gap:8px">
+        <button class="bigbtn" onclick="doRandom()" style="background:#185FA5;flex:1"><span style="font-size:15px;line-height:1">&#128256;</span> สุ่มภารกิจ</button>
+        <button class="bigbtn" onclick="showP('p-lib',null)" style="background:#1D9E75;flex:1"><span style="font-size:15px;line-height:1">&#128218;</span> เลือกเอง</button>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div class="p-sec" style="margin-bottom:0">&#127981; ภารกิจวันนี้ <span id="pq-cnt" style="font-weight:700;color:#888780">(0 ข้อ)</span></div>
+          <button onclick="clearQ()" style="background:none;border:none;font-size:9px;font-weight:800;color:#A32D2D;cursor:pointer;font-family:'Nunito',sans-serif">ล้างทั้งหมด</button>
+        </div>
+        <div id="pq-list"></div>
+        <div id="pq-empty" style="text-align:center;padding:14px;font-size:11px;font-weight:700;color:#888780">กดสุ่ม หรือเลือกจากคลัง</div>
+      </div>
+      <button class="bigbtn" id="p-save" onclick="saveQ()" style="background:#185FA5" disabled>&#10003; บันทึกและส่งให้ลูก</button>
+    </div>
+    <div class="tabbar p-tab">
+      <div class="tab p-inact" onclick="showP('p-dash',this)"><div class="tab-ico">&#128202;</div><span>ภาพรวม</span></div>
+      <div class="tab p-act" onclick="showP('p-manage',this)"><div class="tab-ico">&#128196;</div><span>จัดการ</span></div>
+      <div class="tab p-inact" onclick="showP('p-settings',this)"><div class="tab-ico">&#9881;</div><span>ตั้งค่า</span></div>
+    </div>
+  </div>
+
+  <!-- LIBRARY -->
+  <div class="sc" id="p-lib">
+    <div class="sbar p-sbar"><span>9:41</span><span>● ● ●</span></div>
+    <div class="p-hdr">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><div style="font-size:17px;font-weight:900;color:#fff">คลังภารกิจ &#128218;</div><div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.8)" id="lib-lbl">เลือกแล้ว 0/9</div></div>
+        <button onclick="showP('p-manage',null)" style="background:rgba(255,255,255,.2);border:none;border-radius:8px;padding:5px 10px;color:#fff;font-family:'Nunito',sans-serif;font-size:10px;font-weight:800;cursor:pointer">&#8592; กลับ</button>
+      </div>
+    </div>
+    <div class="p-wave wave"></div>
+    <div class="p-body">
+      <div id="lib-list"></div>
+      <button class="bigbtn" onclick="confirmLib()" style="background:#185FA5">&#10003; ยืนยัน</button>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="sc" id="p-settings">
+    <div class="sbar p-sbar"><span>9:41</span><span>● ● ●</span></div>
+    <div class="p-hdr">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><div style="font-size:17px;font-weight:900;color:#fff">ตั้งค่า &#9881;</div><div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.8)">โปรไฟล์และความปลอดภัย</div></div>
+        <div style="width:44px;height:44px;border-radius:50%;background:#B5D4F4;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1">&#128100;</div>
+      </div>
+    </div>
+    <div class="p-wave wave"></div>
+    <div class="p-body">
+      <div class="p-sec">&#128100; โปรไฟล์ลูก</div>
+      <div class="p-card">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="width:40px;height:40px;border-radius:50%;background:#FFF0E6;border:2px solid #FFD4A8;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1">&#128049;</div>
+          <div><div style="font-size:13px;font-weight:900;color:#0C447C">น้องมิ้ว</div><div style="font-size:10px;font-weight:700;color:#888780">Level 1 · Streak 2 วัน</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+          <div style="background:#E6F1FB;border-radius:9px;padding:6px;text-align:center"><div style="font-size:13px;font-weight:900;color:#0C447C">30</div><div style="font-size:8px;font-weight:800;color:#185FA5">XP max</div></div>
+          <div style="background:#EAF3DE;border-radius:9px;padding:6px;text-align:center"><div style="font-size:13px;font-weight:900;color:#27500A">90</div><div style="font-size:8px;font-weight:800;color:#3B6D11">นาที max</div></div>
+          <div style="background:#FAEEDA;border-radius:9px;padding:6px;text-align:center"><div style="font-size:13px;font-weight:900;color:#633806">20:00</div><div style="font-size:8px;font-weight:800;color:#854F0B">หมดเวลา</div></div>
+        </div>
+      </div>
+      <div class="p-sec">&#128274; ความปลอดภัย</div>
+      <div class="p-card">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #E6F1FB"><span style="font-size:11px;font-weight:800;color:#0C447C">PIN ปัจจุบัน</span><span style="font-size:11px;font-weight:700;color:#888780">&#9679;&#9679;&#9679;&#9679;</span></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="font-size:11px;font-weight:800;color:#0C447C">ล็อคอัตโนมัติ</span><span style="font-size:11px;font-weight:700;color:#888780">1 นาที</span></div>
+        <button onclick="alert('เปลี่ยน PIN')" style="background:#E6F1FB;border:none;border-radius:9px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:900;color:#185FA5;cursor:pointer;margin-top:4px">เปลี่ยน PIN ใหม่</button>
+      </div>
+    </div>
+    <div class="tabbar p-tab">
+      <div class="tab p-inact" onclick="showP('p-dash',this)"><div class="tab-ico">&#128202;</div><span>ภาพรวม</span></div>
+      <div class="tab p-inact" onclick="showP('p-manage',this)"><div class="tab-ico">&#128196;</div><span>จัดการ</span></div>
+      <div class="tab p-act" onclick="showP('p-settings',this)"><div class="tab-ico">&#9881;</div><span>ตั้งค่า</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- KID PHONE -->
+<div class="phone k-phone" id="k-phone" style="display:none">
+  <div class="sc on" id="k-home">
+    <div class="sbar k-sbar"><span>9:41</span><span>● ● ●</span></div>
+    <div style="background:#FF8C42;padding:12px 14px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="color:#fff"><div style="font-size:17px;font-weight:900">น้องมิ้ว &#128075;</div><div style="font-size:10px;font-weight:700;opacity:.85" id="k-greet">สวัสดีตอนเช้า!</div></div>
+        <div style="width:44px;height:44px;border-radius:50%;background:#FFD4A8;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1">&#128049;</div>
+      </div>
+      <div class="k-xp-bar">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="display:flex;align-items:center;gap:5px"><span style="font-size:16px;line-height:1">&#128269;</span><div><div style="font-size:12px;font-weight:900;color:#fff">นักสำรวจน้อย</div><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.75)">Level 1</div></div></div>
+          <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.85)" id="k-xp-lbl">0 XP</div>
+        </div>
+        <div class="k-xp-track"><div class="k-xp-fill" id="k-xp-fill" style="width:0%"></div></div>
+        <div style="display:flex;justify-content:space-between"><span style="font-size:9px;font-weight:700;color:rgba(255,255,255,.7)" id="k-xp-sub">0/5 quest</span><span style="font-size:9px;font-weight:700;color:rgba(255,255,255,.7)">Lv.2 ต้องการ 5</span></div>
+      </div>
+    </div>
+    <div class="k-wave wave"></div>
+    <div class="k-body">
+      <div class="k-stat-grid">
+        <div class="k-stat"><div class="k-stat-v" id="ks-min">0</div><div class="k-stat-l">นาทีวันนี้</div></div>
+        <div class="k-stat"><div class="k-stat-v" id="ks-done">0</div><div class="k-stat-l">เสร็จแล้ว</div></div>
+        <div class="k-stat"><div class="k-stat-v" style="color:#1D9E75;font-size:13px">&#128293;2</div><div class="k-stat-l">streak</div></div>
+      </div>
+      <div class="cheer-msg" id="k-cheer"><div style="font-size:10px;font-weight:700;color:#3B6D11;margin-bottom:2px">&#128172; ข้อความจากพ่อแม่</div><div style="font-size:11px;font-weight:900;color:#27500A" id="k-cheer-txt"></div></div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div style="font-size:10px;font-weight:900;color:#F0997B;letter-spacing:.4px">&#127775; ภารกิจวันนี้</div>
+          <div style="font-size:9px;font-weight:800;color:#B4B2A9" id="k-meta">รอพ่อแม่ตั้งภารกิจ</div>
+        </div>
+        <div id="k-qlist"><div style="text-align:center;padding:18px 10px;font-size:11px;font-weight:700;color:#B4B2A9">&#128274; รอพ่อแม่ตั้งภารกิจก่อนนะ</div></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="bigbtn" id="k-unlock" disabled onclick="kidRequest()" style="background:#FF8C42;flex:2">
+          <span id="k-btn-ico" style="font-size:16px;line-height:1">&#128274;</span>
+          <span id="k-btn-txt">ทำภารกิจก่อนนะ!</span>
+        </button>
+        <button class="bigbtn" onclick="openReqSheet()" style="background:#534AB7;flex:1;border-bottom-color:#3C3489">
+          <span style="font-size:16px;line-height:1">&#10133;</span>
+          <span>ขอเพิ่ม</span>
+        </button>
+      </div>
+    </div>
+    <div class="tabbar k-tab">
+      <div class="tab k-act"><div class="tab-ico">&#127981;</div><span>ภารกิจ</span></div>
+      <div class="tab k-inact"><div class="tab-ico">&#128293;</div><span>Streak</span></div>
+      <div class="tab k-inact"><div class="tab-ico">&#127942;</div><span>รางวัล</span></div>
+    </div>
+  </div>
+  <!-- KID: request more quests sheet (shown as overlay) -->
+  <div class="sc" id="k-reqsheet">
+    <div class="sbar k-sbar"><span>9:41</span><span>● ● ●</span></div>
+    <div style="background:#534AB7;padding:12px 14px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="color:#fff">
+          <div style="font-size:17px;font-weight:900">ขอภารกิจเพิ่ม &#10133;</div>
+          <div style="font-size:10px;font-weight:700;opacity:.8">เลือกภารกิจที่อยากทำเพิ่มวันนี้</div>
+        </div>
+        <button onclick="closeReqSheet()" style="background:rgba(255,255,255,.2);border:none;border-radius:8px;padding:5px 10px;color:#fff;font-family:'Nunito',sans-serif;font-size:10px;font-weight:800;cursor:pointer">&#8592; กลับ</button>
+      </div>
+    </div>
+    <div style="background:#534AB7;height:14px;border-radius:0 0 50% 50%/0 0 12px 12px"></div>
+    <div style="padding:13px 13px 16px;display:flex;flex-direction:column;gap:10px;background:#FFF8F0;flex:1">
+      <div style="font-size:10px;font-weight:700;color:#888780">เลือกได้สูงสุด 3 ข้อ · พ่อแม่จะอนุมัติก่อนนะ</div>
+      <div id="req-pick-list"></div>
+      <button class="bigbtn" id="req-send-btn" onclick="sendQuestReq()" style="background:#534AB7;border-bottom-color:#3C3489" disabled>
+        <span style="font-size:16px;line-height:1">&#128232;</span>
+        <span id="req-send-txt">เลือกภารกิจก่อนนะ</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- KID: Timer screen -->
+  <div class="sc" id="k-timer">
+    <div class="sbar" style="background:#0d0d1a"><span style="color:#00FF87">9:41</span><span style="color:#00FF87">● ● ●</span></div>
+    <div style="background:#0d0d1a;padding:10px 14px 8px;display:flex;justify-content:space-between;align-items:center">
+      <button onclick="closeTimer()" style="background:rgba(255,255,255,.1);border:none;border-radius:8px;padding:5px 10px;color:#fff;font-family:'Nunito',sans-serif;font-size:10px;font-weight:800;cursor:pointer">&#8592; กลับ</button>
+      <div style="font-size:11px;font-weight:900;color:rgba(255,255,255,.6)" id="timer-top-lbl">จับเวลา</div>
+      <div style="width:60px"></div>
+    </div>
+    <div class="timer-screen">
+      <div class="timer-quest-ico" id="timer-ico">&#127981;</div>
+      <div class="timer-quest-name" id="timer-name">ภารกิจ</div>
+      <div class="digital-clock">
+        <span id="t-mm">00</span><span class="digital-colon" id="t-col">:</span><span id="t-ss">00</span>
+      </div>
+      <div class="timer-ms" id="t-ms">00</div>
+      <div class="timer-label" id="timer-status-lbl">พร้อมเริ่ม</div>
+      <div class="timer-progress"><div class="timer-progress-fill" id="timer-prog-fill" style="width:0%"></div></div>
+      <div class="timer-btns">
+        <button class="t-btn reset" onclick="timerReset()" title="Reset">&#8635;</button>
+        <button class="t-btn start" id="t-playpause" onclick="timerPlayPause()">&#9654;</button>
+        <button class="t-btn stop" onclick="timerStop()" title="Stop">&#9632;</button>
+      </div>
+      <button class="t-btn done-btn" id="t-done-btn" onclick="timerDone()" style="margin-top:16px;display:none">&#10003; ทำเสร็จแล้ว!</button>
+    </div>
+  </div>
+
+</div>
+
+</div>
+<div class="footer-note">พ่อแม่ตั้งภารกิจ → กด "บันทึกและส่งให้ลูก" → หน้าลูกอัปเดตทันที</div>
+</div>
+
+<script>
+const AQ=[
+  {id:'q01',t:'ลุกจากเตียงทันทีที่ตื่น',s:'ฝึกวินัยและ routine',i:'&#9728;',bg:'#FAEEDA',xp:5,r:5,m:true},
+  {id:'q02',t:'แปรงฟัน ล้างหน้าเอง',s:'สุขอนามัยและ self-care',i:'&#129740;',bg:'#E1F5EE',xp:5,r:5,m:false},
+  {id:'q03',t:'เช็คอินอารมณ์ตอนเช้า',s:'รู้จักความรู้สึกตัวเอง',i:'&#127775;',bg:'#EEEDFE',xp:5,r:5,m:true},
+  {id:'q04',t:'กินข้าวเช้าครบ 5 หมู่',s:'โภชนาการที่ดีสำหรับสมอง',i:'&#127859;',bg:'#EAF3DE',xp:5,r:5,m:false},
+  {id:'q05',t:'ยืดเส้น 5 นาที',s:'ปลุกร่างกายตอนเช้า',i:'&#129482;',bg:'#FFF0E6',xp:5,r:5,m:false},
+  {id:'q06',t:'เตรียมกระเป๋าเรียนเอง',s:'วางแผนและความรับผิดชอบ',i:'&#128218;',bg:'#E6F1FB',xp:10,r:10,m:false},
+  {id:'q07',t:'ทบทวนบทเรียน 10 นาที',s:'อ่านสรุปก่อนเรียนจริง',i:'&#128214;',bg:'#EEEDFE',xp:15,r:10,m:false},
+  {id:'q08',t:'ทำการบ้านก่อนเล่น',s:'จัดลำดับความสำคัญ',i:'&#128196;',bg:'#EAF3DE',xp:20,r:30,m:true},
+  {id:'q09',t:'ออกกำลังกาย 20 นาที',s:'วิ่ง ขี่จักรยาน เล่นกีฬา',i:'&#127939;',bg:'#FFF0E6',xp:15,r:15,m:true},
+  {id:'q10',t:'ช่วยงานบ้าน 1 อย่าง',s:'กวาด ล้างจาน พับผ้า',i:'&#129704;',bg:'#FBEAF0',xp:10,r:10,m:true},
+  {id:'q11',t:'งานสร้างสรรค์ 20 นาที',s:'วาดรูป ปั้น ประดิษฐ์',i:'&#127912;',bg:'#FBEAF0',xp:10,r:15,m:false},
+  {id:'q12',t:'อ่านหนังสือ 15 นาที',s:'หนังสือที่ชอบ',i:'&#128215;',bg:'#E6F1FB',xp:15,r:20,m:false},
+  {id:'q13',t:'เล่าให้พ่อแม่ฟัง 1 เรื่อง',s:'ฝึกการสื่อสาร',i:'&#129300;',bg:'#EEEDFE',xp:10,r:10,m:false},
+  {id:'q14',t:'กินข้าวเย็นพร้อมครอบครัว',s:'ห้ามเล่นมือถือ',i:'&#127869;',bg:'#EAF3DE',xp:10,r:10,m:false},
+  {id:'q15',t:'Mini Quiz 5 ข้อ',s:'คณิต ภาษา วิทยาศาสตร์',i:'&#129504;',bg:'#E6F1FB',xp:15,r:15,m:false},
+  {id:'q16',t:'ท้าทาย skill ใหม่',s:'โค้ด ทำอาหาร ดนตรี',i:'&#128170;',bg:'#FFF0E6',xp:20,r:20,m:false},
+  {id:'q17',t:'บอกรักหรือขอบคุณใครสักคน',s:'พ่อ แม่ พี่ น้อง เพื่อน',i:'&#128149;',bg:'#FBEAF0',xp:5,r:5,m:false},
+  {id:'q18',t:'จดบันทึก 3 สิ่งดีวันนี้',s:'Gratitude + Growth Mindset',i:'&#128203;',bg:'#E1F5EE',xp:10,r:10,m:true},
+  {id:'q19',t:'อ่านนิทานก่อนนอน',s:'กระตุ้นภาษาและจินตนาการ',i:'&#128218;',bg:'#EEEDFE',xp:10,r:15,m:false},
+  {id:'q20',t:'ตั้งเป้าหมายพรุ่งนี้',s:'วางแผนและ Growth Mindset',i:'&#127775;',bg:'#FAEEDA',xp:5,r:5,m:false},
+  {id:'q21',t:'นอนหลับ 9-10 ชั่วโมง',s:'ปิดมือถือก่อนนอน 30 นาที',i:'&#128564;',bg:'#E6F1FB',xp:10,r:10,m:false},
+  {id:'q22',t:'พูดสวัสดีก่อนออกบ้าน',s:'ฝึกมารยาทและความกตัญญู',i:'&#128172;',bg:'#FBEAF0',xp:5,r:5,m:false},
+];
+
+let pin='',todayQ=[],kidDone=new Set(),libSel=new Set(),savedQ=[];
+AQ.filter(q=>q.m).forEach(q=>libSel.add(q.id));
+
+function setMode(m){
+  const pp=document.getElementById('p-phone'),kp=document.getElementById('k-phone');
+  const bp=document.getElementById('mb-p'),bk=document.getElementById('mb-k');
+  if(m==='p'){
+    pp.style.display='flex';kp.style.display='none';
+    bp.style.cssText='background:#185FA5;color:#fff;border-color:#185FA5';
+    bk.style.cssText='background:#fff;color:#FF8C42;border-color:#FFD4A8';
+  } else {
+    pp.style.display='none';kp.style.display='flex';
+    bk.style.cssText='background:#FF8C42;color:#fff;border-color:#FF8C42';
+    bp.style.cssText='background:#fff;color:#185FA5;border-color:#85B7EB';
+  }
+}
+
+function showP(id,tabEl){
+  document.querySelectorAll('#p-phone .sc').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(tabEl){
+    const tabs=tabEl.closest('.tabbar').querySelectorAll('.tab');
+    tabs.forEach(t=>{t.classList.remove('p-act');t.classList.add('p-inact');});
+    tabEl.classList.add('p-act');tabEl.classList.remove('p-inact');
+  }
+  if(id==='p-lib') renderLib();
+  if(id==='p-manage') renderManage();
+}
+
+function pk(k){
+  if(pin.length>=4) return;
+  pin+=k;updateDots();
+  if(pin.length===4) setTimeout(checkPin,180);
+}
+function pd(){pin=pin.slice(0,-1);updateDots();document.getElementById('pin-err').textContent='';}
+function updateDots(){for(let i=0;i<4;i++)document.getElementById('pd'+i).className='pin-dot'+(i<pin.length?' filled':'');}
+function checkPin(){
+  const e=document.getElementById('pin-err');
+  if(pin==='1234'){e.style.color='#3B6D11';e.textContent='✓ เข้าสู่ระบบแล้ว!';setTimeout(()=>showP('p-dash',null),600);}
+  else{e.style.color='#E24B4A';e.textContent='PIN ไม่ถูกต้อง ลองอีกครั้ง';pin='';updateDots();}
+}
+
+function doRandom(){
+  const mand=AQ.filter(q=>q.m),opt=AQ.filter(q=>!q.m);
+  const picked=new Set(mand.map(q=>q.id));
+  while(picked.size<9){const r=opt.filter(q=>!picked.has(q.id));if(!r.length)break;picked.add(r[Math.floor(Math.random()*r.length)].id);}
+  todayQ=AQ.filter(q=>picked.has(q.id));renderManage();
+}
+
+function renderManage(){
+  const list=document.getElementById('pq-list'),empty=document.getElementById('pq-empty'),btn=document.getElementById('p-save'),cnt=document.getElementById('pq-cnt');
+  cnt.textContent='('+todayQ.length+' ข้อ)';
+  if(!todayQ.length){list.innerHTML='';empty.style.display='block';btn.disabled=true;return;}
+  empty.style.display='none';btn.disabled=false;list.innerHTML='';
+  todayQ.forEach(q=>{
+    const el=document.createElement('div');el.className='qrow-p';
+    el.innerHTML='<div class="qico" style="background:'+q.bg+'">'+q.i+'</div><div class="qinfo"><div class="qtitle">'+q.t+'</div><div class="qsub">'+q.s+'</div></div>'+(q.m?'<div class="mdot"></div>':'')+'<div style="background:#FAEEDA;color:#854F0B;border-radius:7px;padding:2px 6px;font-size:9px;font-weight:900;flex-shrink:0">+'+q.xp+'XP</div><button onclick="rmQ(\''+q.id+'\')" style="background:#FCEBEB;border:none;border-radius:7px;padding:3px 6px;font-size:9px;font-weight:900;color:#A32D2D;cursor:pointer;flex-shrink:0">&#10005;</button>';
+    list.appendChild(el);
+  });
+}
+
+function rmQ(id){if(AQ.find(q=>q.id===id&&q.m)){alert('ภารกิจบังคับลบไม่ได้');return;}todayQ=todayQ.filter(q=>q.id!==id);renderManage();}
+function clearQ(){todayQ=AQ.filter(q=>q.m);renderManage();}
+
+function saveQ(){
+  savedQ=[...todayQ];kidDone=new Set();
+  showP('p-dash',null);
+  renderKid();updatePDash();
+  const el=document.getElementById('ps-total');
+  if(el) el.textContent=savedQ.length;
+  alert('✓ ส่งภารกิจให้ลูกแล้ว! '+savedQ.length+' ภารกิจ');
+}
+
+function renderLib(){
+  const list=document.getElementById('lib-list');list.innerHTML='';
+  document.getElementById('lib-lbl').textContent='เลือกแล้ว '+libSel.size+'/9';
+  AQ.forEach(q=>{
+    const sel=libSel.has(q.id);
+    const el=document.createElement('div');el.className='lib-row'+(sel?' sel':'');el.onclick=()=>toggleLib(q.id);
+    el.innerHTML='<div class="qico" style="background:'+q.bg+'">'+q.i+'</div><div class="qinfo"><div class="qtitle">'+q.t+'</div><div class="qsub">'+q.s+'</div></div>'+(q.m?'<div class="mdot"></div>':'')+'<div style="background:'+(sel?'#185FA5':'#E6F1FB')+';color:'+(sel?'#fff':'#0C447C')+';border-radius:7px;padding:2px 6px;font-size:9px;font-weight:900;flex-shrink:0">'+(sel?'&#10003;':'+'+q.xp+'XP')+'</div>';
+    list.appendChild(el);
+  });
+}
+
+function toggleLib(id){
+  if(libSel.has(id)){if(AQ.find(q=>q.id===id&&q.m)){alert('ภารกิจบังคับต้องเลือกเสมอ');return;}libSel.delete(id);}
+  else{if(libSel.size>=9){alert('เลือกได้สูงสุด 9 ข้อ');return;}libSel.add(id);}
+  renderLib();
+}
+
+function confirmLib(){
+  if(!libSel.size){alert('เลือกอย่างน้อย 1 ข้อ');return;}
+  todayQ=AQ.filter(q=>libSel.has(q.id));
+  AQ.filter(q=>q.m).forEach(q=>{if(!libSel.has(q.id))todayQ.unshift(q);});
+  showP('p-manage',null);
+}
+
+function updatePDash(){
+  const done=savedQ.filter(q=>kidDone.has(q.id)).length,total=savedQ.length;
+  const xp=Array.from(kidDone).reduce((s,id)=>{const q=AQ.find(x=>x.id===id);return s+(q?q.xp:0);},0);
+  const mins=Array.from(kidDone).reduce((s,id)=>{const q=AQ.find(x=>x.id===id);return s+(q?q.r:0);},0);
+  const pct=total>0?Math.round(done/total*100):0;
+  const g=id=>document.getElementById(id);
+  if(g('ps-done')) g('ps-done').textContent=done;
+  if(g('ps-total')) g('ps-total').textContent=total;
+  if(g('ps-xp')) g('ps-xp').textContent=xp;
+  if(g('ps-prog')) g('ps-prog').style.width=pct+'%';
+  if(g('ps-pct')) g('ps-pct').textContent=pct+'% สำเร็จ';
+  if(g('ps-mins')) g('ps-mins').textContent=mins+' นาที';
+  if(g('apv-detail')) g('apv-detail').textContent='ทำ '+done+' ภารกิจ — ได้ '+mins+' นาที';
+}
+
+function approveKid(){
+  const c=document.getElementById('approval');
+  c.style.background='#EAF3DE';c.style.borderColor='#97C459';
+  c.innerHTML='<div style="font-size:11px;font-weight:900;color:#3B6D11;text-align:center">&#10003; อนุมัติแล้ว! ลูกเล่นได้เลย &#127881;</div>';
+  document.getElementById('k-btn-ico').innerHTML='&#127881;';
+  document.getElementById('k-btn-txt').textContent='อนุมัติแล้ว! เล่นได้เลย!';
+  document.getElementById('k-unlock').style.background='#3B6D11';
+}
+function denyKid(){
+  const c=document.getElementById('approval');
+  c.style.background='#f5f5f5';c.style.borderColor='#ddd';
+  c.innerHTML='<div style="font-size:11px;font-weight:700;color:#888780;text-align:center">ปฏิเสธคำขอแล้ว</div>';
+}
+
+function sendCheer(msg){
+  const box=document.getElementById('k-cheer'),txt=document.getElementById('k-cheer-txt');
+  txt.textContent=msg;box.style.display='block';
+  box.classList.remove('pop');void box.offsetWidth;box.classList.add('pop');
+  const s=document.getElementById('cheer-sent');s.style.display='block';
+  setTimeout(()=>{s.style.display='none';},2000);
+}
+
+function renderKid(){
+  const list=document.getElementById('k-qlist'),meta=document.getElementById('k-meta');
+  if(!savedQ.length){
+    list.innerHTML='<div style="text-align:center;padding:18px 10px;font-size:11px;font-weight:700;color:#B4B2A9">&#128274; รอพ่อแม่ตั้งภารกิจก่อนนะ</div>';
+    meta.textContent='รอพ่อแม่ตั้งภารกิจ';updateKid();return;
+  }
+  meta.textContent=kidDone.size+'/'+savedQ.length+' เสร็จแล้ว';
+  list.innerHTML='';
+  savedQ.forEach(q=>{
+    const el=document.createElement('div');
+    const isRunning=timerState.qid===q.id&&timerState.running;
+    const isPaused=timerState.qid===q.id&&!timerState.running&&timerState.elapsed>0;
+    const isOtherRunning=timerState.running&&timerState.qid!==q.id;
+    const isDone=kidDone.has(q.id);
+    const elapsedSec=Math.floor((timerState.qid===q.id?timerState.elapsed:0)/1000);
+    const elMM=String(Math.floor(elapsedSec/60)).padStart(2,'0');
+    const elSS=String(elapsedSec%60).padStart(2,'0');
+    let rowClass='k-qrow';
+    if(isDone) rowClass+=' done';
+    else if(isRunning) rowClass+=' timing';
+    else if(isOtherRunning) rowClass+=' locked-row';
+    el.className=rowClass;
+    const qicoDiv=document.createElement('div');
+    qicoDiv.className='qico';qicoDiv.style.background=q.bg;qicoDiv.innerHTML=q.i;
+    const qinfoDiv=document.createElement('div');
+    qinfoDiv.className='qinfo';
+    let statusHtml='';
+    if(isRunning) statusHtml='<div style="font-size:9px;font-weight:900;color:#FF8C42;margin-top:3px;display:flex;align-items:center;gap:3px"><span style="width:6px;height:6px;border-radius:50%;background:#FF8C42;display:inline-block;animation:blink 1s infinite"></span>จับเวลาอยู่ '+elMM+':'+elSS+'</div>';
+    else if(isPaused) statusHtml='<div style="font-size:9px;font-weight:900;color:#888780;margin-top:3px">⏸ หยุดชั่วคราว '+elMM+':'+elSS+'</div>';
+    qinfoDiv.innerHTML='<div style="font-size:11px;font-weight:900;color:#3C3489;line-height:1.2">'+q.t+'</div><div style="font-size:9px;font-weight:700;color:#888780;margin-top:1px">'+q.s+'</div>'+statusHtml;
+    const rightDiv=document.createElement('div');
+    rightDiv.style.cssText='display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0';
+    const xpBadge=document.createElement('div');
+    xpBadge.style.cssText='background:#FAEEDA;color:#854F0B;border-radius:7px;padding:2px 5px;font-size:9px;font-weight:900';
+    xpBadge.textContent='+'+q.r+'นาที';
+    rightDiv.appendChild(xpBadge);
+    // status icon
+    const statusIco=document.createElement('div');
+    statusIco.style.cssText='font-size:16px;line-height:1;text-align:center';
+    statusIco.textContent=isDone?'✅':isRunning?'⏱️':isPaused?'⏸️':isOtherRunning?'⏳':'▶️';
+    rightDiv.appendChild(statusIco);
+    const doneStripe=document.createElement('div');
+    doneStripe.className='done-stripe';
+    doneStripe.innerHTML='<span style="font-size:12px">⭐</span> เก่ง!';
+    if(q.m){const mdot=document.createElement('div');mdot.className='mdot';el.appendChild(qicoDiv);el.appendChild(qinfoDiv);el.appendChild(mdot);el.appendChild(rightDiv);}
+    else{el.appendChild(qicoDiv);el.appendChild(qinfoDiv);el.appendChild(rightDiv);}
+    el.appendChild(doneStripe);
+    if(isOtherRunning){
+      const lockOverlay=document.createElement('div');
+      lockOverlay.className='qrow-locked-overlay';
+      lockOverlay.innerHTML='⏳ รอภารกิจอื่นก่อน';
+      el.appendChild(lockOverlay);
+    }
+    el.onclick=()=>cardClick(q.id);
+    list.appendChild(el);
+  });
+  updateKid();
+}
+
+function kidToggle(id){
+  if(kidDone.has(id)){
+    // allow un-mark only if not currently timing this quest
+    if(timerState.running&&timerState.qid===id){showToast('หยุดจับเวลาก่อนนะ!','#FF8C42');return;}
+    kidDone.delete(id);renderKid();updatePDash();return;
+  }
+  // must open timer first by clicking card
+  cardClick(id);
+}
+
+function cardClick(id){
+  if(kidDone.has(id)){
+    // already done — allow un-mark if timer not running
+    if(timerState.running&&timerState.qid===id){showToast('หยุดจับเวลาก่อนนะ!','#FF8C42');return;}
+    kidDone.delete(id);renderKid();updatePDash();return;
+  }
+  // if another quest running, block
+  if(timerState.running&&timerState.qid!==id){
+    const runQ=AQ.find(x=>x.id===timerState.qid)||savedQ.find(x=>x.id===timerState.qid);
+    showToast('หยุด "'+( runQ?runQ.t:'ภารกิจอื่น')+'" ก่อนนะ!','#534AB7');return;
+  }
+  // open timer and start immediately
+  openTimer(id,true);
+}
+
+function updateKid(){
+  const mins=Array.from(kidDone).reduce((s,id)=>{const q=AQ.find(x=>x.id===id);return s+(q?q.r:0);},0);
+  const xp=Array.from(kidDone).reduce((s,id)=>{const q=AQ.find(x=>x.id===id);return s+(q?q.xp:0);},0);
+  document.getElementById('ks-min').textContent=mins;
+  document.getElementById('ks-done').textContent=kidDone.size;
+  document.getElementById('k-xp-lbl').textContent=xp+' XP';
+  document.getElementById('k-xp-fill').style.width=Math.min(100,Math.round(kidDone.size/5*100))+'%';
+  document.getElementById('k-xp-sub').textContent=kidDone.size+'/5 quest';
+  const btn=document.getElementById('k-unlock');
+  if(kidDone.size===0){btn.disabled=true;btn.style.background='#FF8C42';document.getElementById('k-btn-ico').innerHTML='&#128274;';document.getElementById('k-btn-txt').textContent='ทำภารกิจก่อนนะ!';}
+  else{btn.disabled=false;btn.style.background='#FF8C42';document.getElementById('k-btn-ico').innerHTML='&#128275;';document.getElementById('k-btn-txt').textContent='ขอปลดล็อก '+mins+' นาที!';}
+}
+
+function kidRequest(){alert('ส่งคำขอให้พ่อแม่แล้ว!\nสลับไปหน้าพ่อแม่เพื่ออนุมัติ');}
+
+// ── TIMER ENGINE ──
+const timerState={qid:null,elapsed:0,target:0,running:false,startedAt:null,interval:null};
+
+function openTimer(qid, autoStart){
+  const q=AQ.find(x=>x.id===qid)||savedQ.find(x=>x.id===qid);
+  if(!q) return;
+  if(kidDone.has(qid)){showToast('ภารกิจนี้ทำเสร็จแล้ว!','#3B6D11');return;}
+  // reset if switching to a new quest
+  if(timerState.qid!==qid){
+    clearInterval(timerState.interval);
+    timerState.qid=qid;
+    timerState.elapsed=0;
+    timerState.target=q.r*60;
+    timerState.running=false;
+    timerState.startedAt=null;
+  }
+  document.getElementById('timer-ico').innerHTML=q.i;
+  document.getElementById('timer-name').textContent=q.t;
+  document.getElementById('timer-top-lbl').textContent=q.t;
+  document.querySelectorAll('#k-phone .sc').forEach(s=>s.classList.remove('on'));
+  document.getElementById('k-timer').classList.add('on');
+  renderTimerDisplay();
+  updateTimerDoneBtn();
+  // auto-start on card click
+  if(autoStart&&!timerState.running){
+    timerState.running=true;
+    timerState.startedAt=Date.now()-timerState.elapsed;
+    timerState.interval=setInterval(tickTimer,50);
+    document.getElementById('t-playpause').className='t-btn pause';
+    document.getElementById('t-playpause').innerHTML='&#9646;&#9646;';
+    document.getElementById('timer-status-lbl').textContent='กำลังจับเวลา...';
+    document.getElementById('t-col').classList.add('blink');
+  }
+}
+
+function closeTimer(){
+  document.querySelectorAll('#k-phone .sc').forEach(s=>s.classList.remove('on'));
+  document.getElementById('k-home').classList.add('on');
+  renderKid();
+}
+
+function timerPlayPause(){
+  if(!timerState.running){
+    timerState.running=true;
+    timerState.startedAt=Date.now()-timerState.elapsed;
+    timerState.interval=setInterval(tickTimer,50);
+    document.getElementById('t-playpause').className='t-btn pause';
+    document.getElementById('t-playpause').innerHTML='&#9646;&#9646;';
+    document.getElementById('timer-status-lbl').textContent='กำลังจับเวลา...';
+    document.getElementById('t-col').classList.add('blink');
+  } else {
+    clearInterval(timerState.interval);
+    timerState.running=false;
+    timerState.elapsed=Date.now()-timerState.startedAt;
+    document.getElementById('t-playpause').className='t-btn start';
+    document.getElementById('t-playpause').innerHTML='&#9654;';
+    document.getElementById('timer-status-lbl').textContent='หยุดชั่วคราว';
+    document.getElementById('t-col').classList.remove('blink');
+  }
+  updateTimerDoneBtn();
+  renderKid();
+}
+
+function timerStop(){
+  clearInterval(timerState.interval);
+  timerState.running=false;
+  timerState.elapsed=0;
+  timerState.startedAt=null;
+  document.getElementById('t-playpause').className='t-btn start';
+  document.getElementById('t-playpause').innerHTML='&#9654;';
+  document.getElementById('timer-status-lbl').textContent='หยุดแล้ว';
+  document.getElementById('t-col').classList.remove('blink');
+  renderTimerDisplay();
+  updateTimerDoneBtn();
+  renderKid();
+}
+
+function timerReset(){
+  clearInterval(timerState.interval);
+  timerState.running=false;
+  timerState.elapsed=0;
+  timerState.startedAt=null;
+  document.getElementById('t-playpause').className='t-btn start';
+  document.getElementById('t-playpause').innerHTML='&#9654;';
+  document.getElementById('timer-status-lbl').textContent='พร้อมเริ่ม';
+  document.getElementById('t-col').classList.remove('blink');
+  document.getElementById('t-done-btn').style.display='none';
+  renderTimerDisplay();
+}
+
+function updateTimerDoneBtn(){
+  const btn=document.getElementById('t-done-btn');
+  if(!btn) return;
+  const elapsed=timerState.elapsed;
+  const paused=!timerState.running&&elapsed>0;
+  const enoughTime=elapsed>=60000; // at least 1 minute
+  if(paused&&enoughTime){
+    btn.style.display='flex';
+    btn.textContent='✓ ทำเสร็จแล้ว! ('+Math.floor(elapsed/60000)+' นาที)';
+  } else if(paused&&!enoughTime){
+    btn.style.display='flex';
+    btn.style.opacity='0.4';
+    btn.style.cursor='not-allowed';
+    const rem=Math.ceil((60000-elapsed)/1000);
+    btn.textContent='⏳ ต้องทำอีก '+rem+' วินาที';
+    btn.onclick=function(){showToast('จับเวลาให้ครบ 1 นาทีก่อนนะ!','#FF8C42');};
+  } else {
+    btn.style.display='none';
+    btn.style.opacity='1';
+    btn.style.cursor='pointer';
+    btn.onclick=timerDone;
+  }
+}
+
+function tickTimer(){
+  timerState.elapsed=Date.now()-timerState.startedAt;
+  renderTimerDisplay();
+  if(timerState.elapsed>=timerState.target*1000){
+    clearInterval(timerState.interval);
+    timerState.running=false;
+    timerState.elapsed=timerState.target*1000;
+    document.getElementById('timer-status-lbl').textContent='ครบเวลาแล้ว! &#127881;';
+    document.getElementById('t-playpause').className='t-btn start';
+    document.getElementById('t-playpause').innerHTML='&#9654;';
+    document.getElementById('t-col').classList.remove('blink');
+    updateTimerDoneBtn();
+    renderKid();
+  }
+}
+
+function renderTimerDisplay(){
+  const ms=timerState.elapsed;
+  const totalSec=Math.floor(ms/1000);
+  const mm=Math.floor(totalSec/60);
+  const ss=totalSec%60;
+  const cs=Math.floor((ms%1000)/10);
+  document.getElementById('t-mm').textContent=String(mm).padStart(2,'0');
+  document.getElementById('t-ss').textContent=String(ss).padStart(2,'0');
+  document.getElementById('t-ms').textContent=String(cs).padStart(2,'0');
+  const target=timerState.target||1;
+  const pct=Math.min(100,Math.round((totalSec/target)*100));
+  const fill=document.getElementById('timer-prog-fill');
+  if(fill) fill.style.width=pct+'%';
+  // color clock based on progress
+  const clock=document.getElementById('t-mm');
+  if(clock){
+    const color=pct>=100?'#FFD700':pct>=75?'#00FF87':pct>=50?'#00CFFF':'#00FF87';
+    ['t-mm','t-ss'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.color=color;});
+    const ms2=document.getElementById('t-ms');
+    if(ms2) ms2.style.color=pct>=100?'rgba(255,215,0,.6)':'rgba(0,255,135,.6)';
+  }
+}
+
+function timerDone(){
+  if(timerState.qid&&!kidDone.has(timerState.qid)){
+    kidDone.add(timerState.qid);
+  }
+  clearInterval(timerState.interval);
+  timerState.running=false;
+  closeTimer();
+  updatePDash();
+}
+
+function showToast(msg, color){
+  let t=document.getElementById('kid-toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='kid-toast';
+    t.style.cssText='position:absolute;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;font-family:"Nunito",sans-serif;font-size:11px;font-weight:900;padding:8px 14px;border-radius:20px;white-space:nowrap;opacity:0;transition:opacity .25s;pointer-events:none;z-index:999;border-left:3px solid #FF8C42';
+    const kp=document.getElementById('k-phone');
+    kp.style.position='relative';
+    kp.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.borderLeftColor=color||'#FF8C42';
+  t.style.opacity='1';
+  clearTimeout(t._hide);
+  t._hide=setTimeout(()=>{t.style.opacity='0';},2200);
+}
+
+setMode('p');
+</script>
+</body>
+</html>

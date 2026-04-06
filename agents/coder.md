@@ -16,7 +16,20 @@
 - Touch target ขั้นต่ำ 48x48
 - `SafeAreaView` จาก `react-native-safe-area-context` ไม่ใช่ `react-native`
 - อ่านไฟล์ก่อนเขียนทุกครั้ง
-- Commit หลังเสร็จแต่ละ feature
+- **แตก branch ใหม่ก่อน commit เสมอ — ห้าม commit ลง `main` โดยตรง**
+
+## Git Protocol (Non-Negotiable)
+```bash
+# ก่อนเริ่มทำงานทุกครั้ง
+git checkout main
+git pull
+git checkout -b feat/{feature-name}   # หรือ fix/ chore/
+
+# หลังเสร็จ
+git add {files}
+git commit -m "feat: {description}"
+git push -u origin feat/{feature-name}
+```
 
 ## Stack
 - `expo-router` — navigation (ห้ามใช้ React Navigation โดยตรง)
@@ -74,4 +87,6 @@
 ```
 feat: {feature name} — {short description}
 fix: {what was fixed}
+chore: {tooling/config change}
+docs: {documentation change}
 ```

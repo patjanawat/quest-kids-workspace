@@ -33,7 +33,8 @@ quest-kids-workspace/
 ### Phase 2 — Build
 1. Spawn Coder agent พร้อม spec + context ครบถ้วน
 2. Coder ทำงานใน `kit/` (quest-kids repo)
-3. Commit เมื่อเสร็จ
+3. **แตก branch ใหม่ก่อน commit เสมอ** — ห้าม commit ลง main โดยตรง
+4. Commit เมื่อเสร็จ แล้ว push branch
 
 ### Phase 3 — Verify
 1. Spawn Reviewer agent ตรวจ code
@@ -70,4 +71,11 @@ quest-kids-workspace/
 3. Feature spec จาก `docs/specs/{feature}.md`
 4. Files ที่ต้องอ่านก่อนเขียน
 5. Files ที่ต้องสร้าง/แก้ไข
-6. Commit message format
+6. Branch name ที่ต้องสร้าง: `feat/{feature-name}`
+7. Commit message format
+
+## Git & Branch Protocol (Non-Negotiable)
+- **ห้าม commit ลง `main` โดยตรงทุกกรณี**
+- ทุก feature/fix/chore → สร้าง branch ใหม่ก่อนเสมอ
+- Branch naming: `feat/xxx`, `fix/xxx`, `chore/xxx`
+- ทำบน repo จริง (`D:/2026/kids/quest-kids/`) ไม่ใช่ workspace

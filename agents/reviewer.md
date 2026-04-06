@@ -26,9 +26,14 @@
 - [ ] PIN ผิด 3 ครั้ง → lockout
 - [ ] ไม่มี quest ที่ทำ → unlock button disabled
 
+### Git
+- [ ] ไม่มี commit ลง `main` โดยตรง — ต้องอยู่บน branch `feat/`, `fix/`, หรือ `chore/`
+- [ ] Branch name ตรงกับ feature ที่ทำ
+
 ## Output
 รายงาน:
 1. Issues found (ถ้ามี)
 2. Fixes applied
 3. TypeScript result
-4. Status: PASS / FAIL
+4. Branch ที่ใช้
+5. Status: PASS / FAIL

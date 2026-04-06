@@ -57,7 +57,7 @@ output.json
 ._*
 
 # Custom folder icons
-Icon
+Icon
 
 # Volume root files
 .DocumentRevisions-V100
@@ -143,6 +143,9 @@ x86/
 
 # Publish Web Output
 *.[Pp]ublish.xml
+
+# Claude Code local settings
+.claude/
 
 ### VS Code
 # VSCode settings (keep shared configuration)

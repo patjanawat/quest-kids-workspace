@@ -42,14 +42,16 @@ Quest Management  ←→  Kid Home
 
 ## Build Status
 
-| # | Module | Phase 1.5 | Phase 2 | Phase 3a | Phase 3b | สถานะ |
-|---|---|---|---|---|---|---|
-| 1 | Auth (PIN) | ⬜ | ⬜ | ⬜ | ⬜ | ยังไม่เริ่ม |
-| 2 | Kid Home | ⬜ | ⬜ | ⬜ | ⬜ | ยังไม่เริ่ม |
-| 3 | Quest Management | ⬜ | ⬜ | ⬜ | ⬜ | ยังไม่เริ่ม |
-| 4 | Timer | ⬜ | ⬜ | ⬜ | ⬜ | ยังไม่เริ่ม |
-| 5 | Parent Dashboard | ⬜ | ⬜ | ⬜ | ⬜ | ยังไม่เริ่ม |
-| 6 | Quest Request | ⬜ | ⬜ | ⬜ | ⬜ | ยังไม่เริ่ม |
+> รายละเอียด tasks แต่ละ module → `tasks/backlog.md`
+
+| # | Module | Breakdown | Phase 1.5 | Phase 2 | Phase 3a | Phase 3b | Done |
+|---|---|---|---|---|---|---|---|
+| 1 | Auth (PIN) | 2026-04-06 | ⬜ | ⬜ | ⬜ | ⬜ | — |
+| 2 | Kid Home | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
+| 3 | Quest Management | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
+| 4 | Timer | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
+| 5 | Parent Dashboard | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
+| 6 | Quest Request | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
 
 > Phase 1.5 = UI Tester เขียน test cases checklist  
 > Phase 2 = Coder implement (TDD)  

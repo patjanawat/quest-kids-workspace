@@ -32,18 +32,23 @@ git commit -m "feat: {description}"
 git push -u origin feat/{feature-name}
 ```
 
-## Testing Protocol (Non-Negotiable)
-- **เขียน test ก่อน implement เสมอ (TDD)**
+## Unit Test Protocol (Non-Negotiable)
+
+> **Unit test คือหน้าที่ของ Coder** — ทดสอบ logic ระดับ code ไม่ใช่ UI
+
+- **เขียน unit test ก่อน implement เสมอ (TDD)**
 - ลำดับ: เขียน test (fail) → implement → test ผ่าน → commit
 - **ห้าม commit จนกว่า `npx jest` ผ่านทั้งหมด — ไม่มีข้อยกเว้น**
 
-### สิ่งที่ต้อง test
+### สิ่งที่ Coder ต้อง unit test
 | ประเภท | ตัวอย่าง |
 |---|---|
 | Store actions | `completeQuest`, `approveUnlock`, `recordPinFail` |
 | Hooks | `useDailyReset`, `useTimer` |
 | Utility functions | level calculation, XP calculation, time formatting |
-| Edge cases | empty array, timer = 0, PIN lockout |
+| Edge cases | empty array, timer = 0, PIN lockout after 3 fails |
+
+> ❌ **ไม่ใช่หน้าที่ของ Coder**: test case ระดับ UI/behavior — นั้นคือหน้าที่ของ UI Tester
 
 ### Test file location
 ```

@@ -88,13 +88,21 @@
 - [ ] {behavior ที่ต้อง verify ได้}
 - [ ] {behavior ที่ต้อง verify ได้}
 
-## Unit Test Cases (Coder ต้องเขียนก่อน implement)
+## Unit Tests (หน้าที่ของ Coder — เขียนก่อน implement)
+> Coder เขียน unit test ทดสอบ logic ระดับ code: store actions, hooks, utils
 ### {store action / hook / util ที่เกี่ยวข้อง}
 | Test case | Input | Expected output |
 |---|---|---|
 | happy path | {input} | {output} |
 | edge case | {input} | {output} |
 | error case | {input} | {output} |
+
+## Test Cases (หน้าที่ของ UI Tester — verify behavior และ UI)
+> UI Tester ตรวจว่า UI และ behavior ตรงกับ spec + mockup
+| # | Test case | Expected behavior |
+|---|---|---|
+| 1 | {สถานการณ์} | {UI ที่ควรเห็น / action ที่ควรเกิด} |
+| 2 | {edge case} | {behavior ที่คาดหวัง} |
 
 ## Out of Scope
 - {สิ่งที่ไม่ทำใน sprint นี้}

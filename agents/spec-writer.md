@@ -88,6 +88,14 @@
 - [ ] {behavior ที่ต้อง verify ได้}
 - [ ] {behavior ที่ต้อง verify ได้}
 
+## Unit Test Cases (Coder ต้องเขียนก่อน implement)
+### {store action / hook / util ที่เกี่ยวข้อง}
+| Test case | Input | Expected output |
+|---|---|---|
+| happy path | {input} | {output} |
+| edge case | {input} | {output} |
+| error case | {input} | {output} |
+
 ## Out of Scope
 - {สิ่งที่ไม่ทำใน sprint นี้}
 ```
@@ -122,3 +130,4 @@
 - ❌ ไม่ระบุ exact Thai text
 - ❌ ไม่ระบุ store action ที่ต้องเรียก
 - ❌ spec ที่ Coder ต้องตีความเอง
+- ❌ ไม่มี Unit Test Cases section — ทุก spec ต้องมีเสมอ

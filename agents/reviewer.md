@@ -30,10 +30,18 @@
 - [ ] ไม่มี commit ลง `main` โดยตรง — ต้องอยู่บน branch `feat/`, `fix/`, หรือ `chore/`
 - [ ] Branch name ตรงกับ feature ที่ทำ
 
+### Tests
+- [ ] มี test file สำหรับทุก store action ที่เพิ่ม/แก้ไข
+- [ ] มี test file สำหรับทุก hook ที่เพิ่ม/แก้ไข
+- [ ] มี test file สำหรับทุก utility function
+- [ ] รัน `npx jest` แล้วผ่านทั้งหมด — **ห้าม PASS ถ้า test fail แม้แต่ 1 case**
+- [ ] test ครอบคลุม happy path + edge cases + error cases
+
 ## Output
 รายงาน:
 1. Issues found (ถ้ามี)
 2. Fixes applied
 3. TypeScript result
-4. Branch ที่ใช้
-5. Status: PASS / FAIL
+4. Test result: `X passed, Y failed` (รัน `npx jest` จริง)
+5. Branch ที่ใช้
+6. Status: PASS / FAIL

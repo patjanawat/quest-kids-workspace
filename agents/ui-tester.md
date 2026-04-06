@@ -31,12 +31,14 @@ Phase 3 (หลัง Coder เสร็จ):
 
 ## Verification Protocol
 
-### Step 1 — TypeScript
+### Step 1 — TypeScript + Unit Tests
 ```bash
 cd D:/2026/kids/quest-kids
 npx tsc --noEmit 2>&1
+npx jest 2>&1
 ```
-→ ต้องไม่มี error ก่อนไปขั้นต่อไป
+→ **ทั้ง TypeScript และ unit test ทุก case ต้องผ่าน** ก่อนไปขั้นต่อไป
+→ ถ้า test fail → ส่งกลับ Coder ทันที ไม่ตรวจขั้นต่อไป
 
 ### Step 2 — Code Review (อ่านไฟล์)
 ตรวจแต่ละไฟล์ที่ถูกแก้:

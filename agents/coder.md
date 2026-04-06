@@ -25,11 +25,38 @@ git checkout main
 git pull
 git checkout -b feat/{feature-name}   # หรือ fix/ chore/
 
-# หลังเสร็จ
+# หลังเสร็จ — ต้องผ่าน test ก่อน commit
+npx jest --passWithNoTests            # ต้องผ่านทั้งหมด
 git add {files}
 git commit -m "feat: {description}"
 git push -u origin feat/{feature-name}
 ```
+
+## Testing Protocol (Non-Negotiable)
+- **เขียน test ก่อน implement เสมอ (TDD)**
+- ลำดับ: เขียน test (fail) → implement → test ผ่าน → commit
+- **ห้าม commit จนกว่า `npx jest` ผ่านทั้งหมด — ไม่มีข้อยกเว้น**
+
+### สิ่งที่ต้อง test
+| ประเภท | ตัวอย่าง |
+|---|---|
+| Store actions | `completeQuest`, `approveUnlock`, `recordPinFail` |
+| Hooks | `useDailyReset`, `useTimer` |
+| Utility functions | level calculation, XP calculation, time formatting |
+| Edge cases | empty array, timer = 0, PIN lockout |
+
+### Test file location
+```
+store/questStore.test.ts       ← store actions
+hooks/useDailyReset.test.ts    ← hooks
+hooks/useTimer.test.ts
+utils/{name}.test.ts           ← utility functions
+```
+
+### Test stack
+- Jest + `@testing-library/react-native`
+- Mock AsyncStorage: `jest.mock('@react-native-async-storage/async-storage')`
+- Mock expo-router: `jest.mock('expo-router')`
 
 ## Stack
 - `expo-router` — navigation (ห้ามใช้ React Navigation โดยตรง)

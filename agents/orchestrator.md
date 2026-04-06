@@ -34,12 +34,15 @@ quest-kids-workspace/
 1. Spawn Coder agent พร้อม spec + context ครบถ้วน
 2. Coder ทำงานใน `kit/` (quest-kids repo)
 3. **แตก branch ใหม่ก่อน commit เสมอ** — ห้าม commit ลง main โดยตรง
-4. Commit เมื่อเสร็จ แล้ว push branch
+4. **Coder เขียน unit test / test case ก่อน implement เสมอ (TDD)**
+5. **ห้าม commit จนกว่า test ทั้งหมดจะผ่าน**
+6. Commit เมื่อเสร็จ แล้ว push branch
 
 ### Phase 3 — Verify
 1. Spawn Reviewer agent ตรวจ code
 2. รัน TypeScript check: `cd kit && npx tsc --noEmit`
-3. อัปเดต `tasks/` status
+3. รัน test: `cd kit && npx jest --passWithNoTests`
+4. อัปเดต `tasks/` status
 
 ## Mockup Reference
 
@@ -79,3 +82,9 @@ quest-kids-workspace/
 - ทุก feature/fix/chore → สร้าง branch ใหม่ก่อนเสมอ
 - Branch naming: `feat/xxx`, `fix/xxx`, `chore/xxx`
 - ทำบน repo จริง (`D:/2026/kids/quest-kids/`) ไม่ใช่ workspace
+
+## Testing Protocol (Non-Negotiable)
+- **เขียน unit test / test case ก่อน implement เสมอ (TDD)**
+- test ต้องครอบคลุม: happy path, edge cases, error cases
+- **ห้าม commit จนกว่า `npx jest` ผ่านทั้งหมด**
+- test files อยู่ที่: `__tests__/` หรือ `{file}.test.ts` คู่กับ source file

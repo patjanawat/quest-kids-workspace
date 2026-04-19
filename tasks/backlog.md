@@ -1,6 +1,6 @@
 # Backlog — little-heroes
 
-> อัปเดต: 2026-04-06  
+> อัปเดต: 2026-04-19  
 > Priority reference: `docs/priority-modules.md`
 
 ---
@@ -9,92 +9,19 @@
 
 | # | Module | Breakdown | Phase 1.5 | Phase 2 | Phase 3a | Phase 3b | Done |
 |---|---|---|---|---|---|---|---|
-| 1 | Auth (PIN) | 2026-04-06 | ⬜ | ⬜ | ⬜ | ⬜ | — |
-| 2 | Kid Home | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
-| 3 | Quest Management | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
-| 4 | Timer | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
-| 5 | Parent Dashboard | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
-| 6 | Quest Request | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
+| 1 | Auth (PIN) | ✅ | ✅ | ✅ | — | — | ✅ 2026-04-19 |
+| 2 | Kid Home | ✅ | — | ✅ | — | — | ✅ 2026-04-19 |
+| 3 | Quest Management | ✅ | — | ✅ | — | — | ✅ 2026-04-19 |
+| 4 | Timer | ✅ | — | ✅ | — | — | ✅ 2026-04-19 |
+| 5 | Parent Dashboard | ✅ | — | ✅ | — | — | ✅ 2026-04-19 |
+| 6 | Quest Request | ✅ | — | ✅ | — | — | ✅ 2026-04-19 |
 
 > Phase 1.5 = UI Tester เขียน test cases | Phase 2 = Coder (TDD) | Phase 3a = Reviewer | Phase 3b = UI Tester verify
 
 ---
 
-## Module 1 — Auth (PIN)
+## Module 4–6 — Pending Breakdown
 
-> Breakdown: 2026-04-06 | Spec: `docs/specs/01-auth.md`  
-> Priority: 🔴 Critical — gate ของ parent area ทุก screen
-
-### Tasks
-
-#### Phase 1.5 — UI Tester: Test Cases
-- [x] เขียน test cases checklist → `docs/specs/01-auth-test-cases.md`
-  - Happy path: กรอก PIN ถูก 4 หลัก → navigate เข้า parent
-  - Error: กรอก PIN ผิด → shake + error message
-  - Lockout: ผิด 3 ครั้ง → overlay + countdown
-  - Edge: lockout ค้างจาก session ก่อน → reset อัตโนมัติเมื่อเวลาผ่าน
-  - Edge: กลับมา parent area → ต้องกรอก PIN ใหม่ (local state ไม่ persist)
-
-#### Phase 2 — Coder: Implement (TDD)
-- [ ] สร้าง branch `feat/auth-pin`
-- [ ] เขียน unit test ก่อน (fail) — `hooks/usePinAuth.test.ts`
-  - [ ] test: กรอก digit ทีละตัว → entered สะสมถูกต้อง
-  - [ ] test: กรอกครบ 4 หลักถูก → unlocked = true, resetPinFails() ถูกเรียก
-  - [ ] test: กรอกผิด → recordPinFail() ถูกเรียก, entered ล้างหลัง 600ms
-  - [ ] test: pinFailCount >= 3 → isLockedOut = true
-  - [ ] test: lockout หมดเวลา → isLockedOut = false
-  - [ ] test: กด delete → ลบตัวสุดท้าย, disabled เมื่อว่าง
-- [ ] implement `store/questStore.ts` — เพิ่ม `recordPinFail()`, `resetPinFails()`
-- [ ] implement `hooks/usePinAuth.ts`
-  - input: ไม่มี (อ่าน store โดยตรง)
-  - output: `entered`, `error`, `unlocked`, `isLockedOut`, `lockoutMinutesLeft`, `handleDigit()`, `handleDelete()`
-- [ ] implement `components/PinDot.tsx` — dot แสดงสถานะ filled/empty
-- [ ] implement `components/PinKeypad.tsx` — numpad 0-9, delete, disabled state
-- [ ] implement `app/parent/_layout.tsx` — PIN gate: render PinScreen หรือ `<Slot />`
-- [ ] unit test ผ่านทั้งหมด (`npx jest`) ก่อน commit
-- [ ] commit: `feat: implement PIN gate with lockout`
-
-#### Phase 3a — Reviewer
-- [ ] รัน `npx tsc --noEmit` + `npx jest`
-- [ ] ตรวจ architecture (screen ไม่มี logic, hook มี logic ครบ)
-- [ ] ตรวจ code quality (ไม่มี any, ไม่ hardcode สี, magic number)
-- [ ] ตรวจ spec alignment (acceptance criteria ครบ)
-- [ ] ออก Reviewer Report → PASS / FAIL
-
-#### Phase 3b — UI Tester: Verify
-- [ ] รัน test cases checklist จาก Phase 1.5
-- [ ] ตรวจ mockup alignment (blue header `#185FA5`, dots, keypad layout)
-- [ ] ตรวจ regression (store persistence, daily reset ยังทำงาน)
-- [ ] ออก UI Tester Report → PASS / FAIL
-
-### Acceptance Criteria (จาก spec)
-- [ ] กรอก PIN 4 หลักถูก → เข้า parent dashboard ทันที (ไม่ต้องกด OK)
-- [ ] PIN ผิด → shake animation + `"PIN ไม่ถูกต้อง ลองอีกครั้ง"`
-- [ ] ผิด 3 ครั้ง → lockout overlay + countdown นาที
-- [ ] countdown อัปเดตทุกวินาที
-- [ ] หมด lockout → overlay หาย + กรอกได้ใหม่
-- [ ] Delete ลบทีละหลัก, disabled เมื่อว่าง
-- [ ] Hint `"รหัสทดสอบ: 1234"` แสดงเมื่อไม่มี error
-
-### Files ที่ต้องสร้าง/แก้ไข
-| Action | File |
-|---|---|
-| แก้ไข | `store/questStore.ts` — เพิ่ม `recordPinFail`, `resetPinFails` |
-| สร้าง | `hooks/usePinAuth.ts` |
-| สร้าง | `hooks/usePinAuth.test.ts` |
-| สร้าง | `components/PinDot.tsx` |
-| สร้าง | `components/PinKeypad.tsx` |
-| แก้ไข | `app/parent/_layout.tsx` — PIN gate logic |
-| สร้าง | `docs/specs/01-auth-test-cases.md` |
-
----
-
-## Module 2–6 — Pending Breakdown
-
-> จะ breakdown เมื่อ Module 1 เสร็จ (Phase 3b PASS)
-
-- **Kid Home** — spec พร้อม: `docs/specs/04-kid-home.md`
-- **Quest Management** — spec พร้อม: `docs/specs/03-quest-management.md`
 - **Timer** — spec พร้อม: `docs/specs/06-timer.md`
 - **Parent Dashboard** — spec พร้อม: `docs/specs/02-parent-dashboard.md`
 - **Quest Request** — spec พร้อม: `docs/specs/05-quest-request.md`
@@ -103,18 +30,20 @@
 
 ## Infrastructure Fixes (ทำก่อน build เริ่ม)
 
-- [ ] เพิ่ม SafeAreaProvider ใน `_layout.tsx`
-- [ ] เพิ่ม Reanimated plugin ใน `babel.config.js`
+- [x] เพิ่ม SafeAreaProvider ใน `_layout.tsx`
+- [x] เพิ่ม Reanimated plugin ใน `babel.config.js`
 
 ---
 
 ## Future / Icebox
 
-- [ ] First-run onboarding (ตั้งชื่อเด็ก + PIN)
-- [ ] Background timer handling (pause เมื่อ app ออก)
-- [ ] Haptic feedback (expo-haptics)
-- [ ] Thai font — Kanit via expo-font
-- [ ] Force PIN change จาก default 1234
+- [x] First-run onboarding — 3-step wizard, kidName + avatar + PIN (commit b3b2c1e)
+- [x] Background timer handling — useBackgroundTimer hook, AppState diff (commit 35c708e)
+- [x] Haptic feedback — PinInput, TimerControls, UnlockButton (commit 0bbefe8)
+- [x] Thai font — Kanit 400/600/700 via @expo-google-fonts/kanit (commit 0bbefe8)
+- [x] Force PIN change จาก default 1234 — onboarding บังคับตั้ง PIN ใหม่แล้ว (ห้าม 1234)
+- [x] Session timeout — auto-lock parent screen on foreground (commit 0bbefe8)
+- [x] ลบ PIN hint "รหัสเริ่มต้น: 1234" ออกจาก parent screen (commit 0bbefe8)
 
 ---
 
@@ -129,4 +58,10 @@
 - [x] Workspace agent system (orchestrator, architect, spec-writer, coder, reviewer, ui-tester)
 - [x] Specs ครบ 6 modules (`docs/specs/`)
 - [x] Priority & build order doc (`docs/priority-modules.md`)
-- [x] Module 1 Auth — task breakdown (2026-04-06)
+- [x] Infrastructure fixes (SafeAreaProvider, Reanimated, metro config, react-dom)
+- [x] **Module 1 — Auth (PIN)** — PinInput, lockout 3 ครั้ง/5 นาที, recordPinFail, resetPinFails (commit 5a4ccd3)
+- [x] **Module 2 — Kid Home** — KidHeader + XP/level, KidStatGrid, CheerBanner, QuestCard 4 states, UnlockButton, KidTabBar (commit 9dd0038)
+- [x] **Module 3 — Quest Management** — QUEST_LIBRARY 22 items, QuestManageCard, ParentTabBar, manage screen, library picker (commit f8157af)
+- [x] **Module 4 — Timer** — dark theme stopwatch, DigitalClock neon glow, QuestContext, TimerProgressBar, TimerControls, pause/resume/reset (commit 26d1d38)
+- [x] **Module 5 — Parent Dashboard** — StatGrid, ProgressSummaryCard, ApprovalCard, QuestRequestCard, CheerSection, Settings screen (commit 434cd47)
+- [x] **Module 6 — Quest Request** — QuestRequestItem (3 states), quest filter, max 3 select, submit to parent (commit 37bbde7)

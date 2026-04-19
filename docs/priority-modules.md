@@ -46,9 +46,9 @@ Quest Management  ←→  Kid Home
 
 | # | Module | Breakdown | Phase 1.5 | Phase 2 | Phase 3a | Phase 3b | Done |
 |---|---|---|---|---|---|---|---|
-| 1 | Auth (PIN) | 2026-04-06 | ✅ | ⬜ | ⬜ | ⬜ | — |
-| 2 | Kid Home | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
-| 3 | Quest Management | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
+| 1 | Auth (PIN) | ✅ | ✅ | ✅ | — | — | ✅ 2026-04-19 |
+| 2 | Kid Home | ✅ | — | ✅ | — | — | ✅ 2026-04-19 |
+| 3 | Quest Management | ✅ | — | ✅ | — | — | ✅ 2026-04-19 |
 | 4 | Timer | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
 | 5 | Parent Dashboard | — | ⬜ | ⬜ | ⬜ | ⬜ | — |
 | 6 | Quest Request | — | ⬜ | ⬜ | ⬜ | ⬜ | — |

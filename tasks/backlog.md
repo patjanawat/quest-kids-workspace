@@ -28,7 +28,7 @@
 ### Tasks
 
 #### Phase 1.5 — UI Tester: Test Cases
-- [ ] เขียน test cases checklist → `docs/specs/01-auth-test-cases.md`
+- [x] เขียน test cases checklist → `docs/specs/01-auth-test-cases.md`
   - Happy path: กรอก PIN ถูก 4 หลัก → navigate เข้า parent
   - Error: กรอก PIN ผิด → shake + error message
   - Lockout: ผิด 3 ครั้ง → overlay + countdown

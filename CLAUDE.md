@@ -4,14 +4,15 @@
 
 | ชื่อ | Path |
 |---|---|
-| App (Expo React Native) | `./kit/` (submodule → quest-kids repo) |
+| App (Expo React Native) | `./kit/little-heroes/` (submodule → quest-kids repo) |
 
-> ⚠️ ห้ามแก้ code ใน workspace — แก้ได้เฉพาะใน `kit/` (quest-kids repo) เท่านั้น
+> ⚠️ ห้ามแก้ code ใน workspace root — แก้ได้เฉพาะใน `kit/little-heroes/` เท่านั้น
+> ⚠️ `kit/` เป็น submodule — commit ต้องรันจาก `kit/little-heroes/` ไม่ใช่ workspace root
 
 ## App Structure
 
 ```
-kit/
+kit/little-heroes/
 ├── app/              ← Expo Router screens
 │   ├── _layout.tsx
 │   ├── index.tsx     ← Kid home
@@ -43,13 +44,14 @@ kit/
 ## Working Protocol
 
 1. Read spec in `docs/specs/` before building
-2. Write code only in `kit/` (quest-kids repo)
-3. Commit from `kit/` directory
-4. Update `tasks/` after completing features
+2. Edit files in `kit/little-heroes/` (= `D:\2026\kids\quest-kids\`)
+3. Create branch first: `git checkout -b <branch>` from `kit/little-heroes/`
+4. Commit from `kit/little-heroes/` directory
+5. Update `tasks/` after completing features
 
 ## Run App
 
 ```bash
-cd kit
-npx expo start
+cd kit/little-heroes
+npx expo start --clear
 ```
